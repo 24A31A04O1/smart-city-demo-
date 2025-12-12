@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Civic Reporting - Home</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #ff00cc, #333399, #00f5a0, #00d9f5, #ff6f61, #ffcc00, #ff0077, #00ffea);
+      background-size: 800% 800%;
+      animation: gradientBG 14s ease infinite;
+      color: #fff;
+      text-align: center;
+      padding: 80px;
+      perspective: 1200px; /* Enables deep 3D effect */
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 3.8rem;
+      margin-bottom: 1rem;
+      text-shadow:
+        0 0 15px rgba(255, 255, 255, 0.9),
+        0 0 30px rgba(0, 255, 255, 0.9),
+        0 0 60px rgba(255, 0, 255, 0.8),
+        0 0 100px rgba(255, 255, 255, 0.5);
+      transform: translateZ(40px);
+    }
+
+    p {
+      font-size: 1.4rem;
+      margin-bottom: 2.5rem;
+      text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+      transform: translateZ(30px);
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 15px;
+      padding: 18px 50px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(14px);
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(0, 255, 255, 0.7),
+        0 0 40px rgba(255, 0, 255, 0.6),
+        inset 0 0 15px rgba(255, 255, 255, 0.15);
+      transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+      transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    .btn:hover {
+      transform: translateZ(60px) rotateX(8deg) rotateY(-5deg) scale(1.1);
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(0, 255, 255, 0.9),
+        0 0 60px rgba(255, 0, 255, 0.85),
+        inset 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateZ(0) scale(1); }
+      50% { transform: translateZ(20px) scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🌍 Civic Reporting Portal</h1>
+  <p>Register, submit reports with images & location. Admin dashboard is handled separately.</p>
+  <a class="btn" href="{{ url_for('login') }}">Login</a>
+  <a class="btn" href="{{ url_for('register') }}">Register</a>
+</body>
+</html>
