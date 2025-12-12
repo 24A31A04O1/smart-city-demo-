@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Test — Submit New Issue (With Images)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Inter, "Segoe UI", Arial; background:#f7fbfd; color:#222; padding:24px; }
+    .card { max-width:720px; margin:24px auto; background:#fff; border-radius:10px;
+            padding:20px; box-shadow:0 6px 24px rgba(0,0,0,0.08); }
+    label{display:block;margin:10px 0 6px;font-weight:600}
+    input, select, textarea, button{
+      width:100%; padding:10px; border-radius:8px; border:1px solid #d5dbe0; font-size:14px
+    }
+    textarea{min-height:90px}
+    .row{display:flex;gap:12px}
+    .row > *{flex:1}
+    small.note{color:#666}
+    .actions{display:flex;gap:8px;margin-top:12px}
+    .actions button{flex:1}
+    .msg{padding:10px;border-radius:8px;margin-top:12px}
+    .success{background:#e6ffef;border:1px solid #b7f0c7;color:#0b7a3a}
+    .error{background:#fff1f0;border:1px solid #f2a6a6;color:#9b2b2b}
+    pre{background:#0f1724;color:#e6eef8;padding:10px;border-radius:6px;overflow:auto;max-height:200px}
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Test — Submit New Issue (With Images)</h2>
+
+    <form id="testForm" enctype="multipart/form-data">
+
+      <label for="district">District</label>
+      <select id="district" name="district_id">
+        <option value="">-- Select district (optional) --</option>
+      </select>
+
+      <label for="constituency">Constituency</label>
+      <select id="constituency" name="constituency_id">
+        <option value="">-- Select constituency (optional) --</option>
+      </select>
+
+      <label for="department">Department</label>
+      <select id="department" name="department_id">
+        <option value="">-- Select department (optional) --</option>
+      </select>
+
+      <label for="place">Place (required)</label>
+      <input id="place" name="place" required placeholder="E.g. Block B, Street 4" />
+
+      <label for="address">Address</label>
+      <input id="address" name="address" placeholder="Optional address" />
+
+      <label for="description">Description (required)</label>
+      <textarea id="description" name="description" required placeholder="Describe the issue"></textarea>
+
+      <div class="row">
+        <div>
+          <label for="latitude">Latitude</label>
+          <input id="latitude" name="latitude" required placeholder="16.306700" />
+        </div>
+        <div>
+          <label for="longitude">Longitude</label>
+          <input id="longitude" name="longitude" required placeholder="80.436500" />
+        </div>
+      </div>
+
+      <br>
+
+      <label>Upload Images (max 5)</label>
+      <input type="file" name="image1" accept="image/*" />
+      <input type="file" name="image2" accept="image/*" />
+      <input type="file" name="image3" accept="image/*" />
+      <input type="file" name="image4" accept="image/*" />
+      <input type="file" name="image5" accept="image/*" />
+
+      <small class="note">Tip: click "Use my location" to auto-fill coordinates</small>
+
+      <div class="actions">
+        <button type="button" id="useLocationBtn">Use my location</button>
+        <button type="submit" id="submitBtn">Submit Issue</button>
+      </div>
+    </form>
+
+    <div id="message"></div>
+
+    <h4 style="margin-top:18px">Raw server response</h4>
+    <pre id="rawResponse">No response yet.</pre>
+  </div>
+
+
+<script>
+// -------------------- Helper UI message --------------------
+function showMessage(text, type='success') {
+  document.getElementById('message').innerHTML =
+    `<div class="msg ${type}">${text}</div>`;
+}
+
+// -------------------- Populate dropdowns --------------------
+async function fetchAndPopulate(url, selectEl) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
+    data.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.id;
+      opt.textContent = item.name;
+      selectEl.appendChild(opt);
+    });
+  } catch (e) {
+    console.error("Dropdown fetch error:", e);
+  }
+}
+
+async function init() {
+  await fetchAndPopulate('/districts', document.getElementById('district'));
+}
+
+document.getElementById('district').addEventListener('change', async () => {
+  const d = document.getElementById('district').value;
+  const cSel = document.getElementById('constituency');
+  const dSel = document.getElementById('department');
+
+  cSel.innerHTML = '<option value="">-- Select constituency --</option>';
+  dSel.innerHTML = '<option value="">-- Select department --</option>';
+
+  if (!d) return;
+
+  await fetchAndPopulate(`/constituencies/${d}`, cSel);
+  await fetchAndPopulate(`/departments_by_district/${d}`, dSel);
+});
+
+// -------------------- Use device location --------------------
+document.getElementById('useLocationBtn').addEventListener('click', () => {
+  if (!navigator.geolocation) return alert("Geolocation not supported");
+
+  navigator.geolocation.getCurrentPosition(pos => {
+    document.getElementById('latitude').value = pos.coords.latitude.toFixed(6);
+    document.getElementById('longitude').value = pos.coords.longitude.toFixed(6);
+    showMessage("Location filled!", "success");
+  }, err => {
+    showMessage("Location error: " + err.message, "error");
+  });
+});
+
+// -------------------- Submit form --------------------
+document.getElementById('testForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  let btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+
+  const formData = new FormData(e.target);
+
+  try {
+    const res = await fetch("/new_issue", {
+      method: "POST",
+      body: formData
+    });
+
+    const txt = await res.text();
+    let json;
+    try { json = JSON.parse(txt); } catch { json = txt; }
+
+    document.getElementById('rawResponse').textContent =
+      typeof json === "string" ? json : JSON.stringify(json, null, 2);
+
+    if (res.status === 201) {
+      showMessage("Issue submitted successfully!", "success");
+      // e.target.reset(); // uncomment if needed
+    } else {
+      showMessage("Error submitting — see response below.", "error");
+    }
+
+  } catch (err) {
+    console.error(err);
+    showMessage("Network error — check console!", "error");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Submit Issue";
+});
+
+// -------------------- Init Page --------------------
+init();
+</script>
+
+</body>
+</html>
