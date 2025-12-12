@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+      color: #fff;
+      position: relative;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+    }
+
+    .logout-button {
+      background-color: #e94560;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .logout-button:hover {
+      background-color: #ff6b81;
+      transform: scale(1.05);
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      color: #fff;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      text-decoration: none;
+      color: #fff;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a href="/logout" class="logout-button">🔓 Logout</a>
+  </div>
+
+  <div class="dashboard-container">
+    <h1>Welcome to Your Dashboard</h1>
+    <div class="card-grid">
+      <a href="/profile" class="card">
+        <h2>👤 Profile</h2>
+        <p>View & edit your profile</p>
+      </a>
+      <a href="/new_issue" class="card">
+        <h2>📝 Submit a New Issue</h2>
+        <p>Report problems with details & images</p>
+      </a>
+      <a href="/submitted_issues" class="card">
+        <h2>📂 Submitted Issues</h2>
+        <p>Track and manage your reported issues</p>
+      </a>
+      <a href="/tracking" class="card">
+        <h2>📍 Tracking</h2>
+        <p>Track and monitor your submitted issues</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
