@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+<style>
+/* Body */
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f0e1; /* light beige background */
+    color: #fff;
+}
+
+/* Card Container */
+.card {
+    width: 380px;
+    background-color: #00695c; /* dark emerald */
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+/* Card Header */
+.card h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #e0f2f1;
+}
+
+/* Flash Messages */
+.card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    color: #ff6b6b;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Input Fields */
+input {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 10px 0 20px 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.15); /* slightly lighter than card */
+    color: #f0f2f1;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+input::placeholder {
+    color: rgba(224,242,241,0.7);
+}
+
+input:focus {
+    border-color: #26a69a;
+    box-shadow: 0 0 8px rgba(38,166,154,0.5);
+    background: rgba(255,255,255,0.25);
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 14px 0;
+    margin-top: 10px;
+    background: #26a69a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    background: #009688;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Links */
+.card p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #e0f2f1;
+}
+
+.card a {
+    color: #b2dfdb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+</style>
+
+
+<body>
+  <div class="card">
+    <h2>Login</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <input name="email" type="email" placeholder="Email" required>
+      <input name="password" type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p><a href="{{ url_for('register') }}">Create account</a></p>
+  </div>
+</body>
+</html>
