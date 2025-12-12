@@ -1,0 +1,10 @@
+flask
+gunicorn
+python-dotenv
+supabase
+postgrest
+gotrue
+storage3
+realtime
+werkzeug
+requests
