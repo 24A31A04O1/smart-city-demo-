@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Submitted Issues</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .back-link a {
+      background-color: #34495e;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .issue-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .issue-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.5rem;
+      color: #2193b0;
+    }
+
+    .image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      gap: 10px;
+    }
+
+    .image-gallery img {
+      width: 120px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="back-link">
+  <a href="/dashboard">← Back to Dashboard</a>
+</div>
+
+<h2>📂 My Submitted Issues</h2>
+
+{% if issues|length == 0 %}
+  <p style="text-align:center; font-size:1.2rem;">No issues submitted yet.</p>
+{% endif %}
+
+{% for issue in issues %}
+  <div class="issue-card">
+
+    <h3>{{ issue.place }}</h3>
+
+    <p><strong>District:</strong> {{ issue.districts.name }}</p>
+    <p><strong>Constituency:</strong> {{ issue.constituencies.name }}</p>
+    <p><strong>Department:</strong> {{ issue.departments.name }}</p>
+
+    <p><strong>Submitted:</strong>
+      {{ issue.created_at[:10] }} {{ issue.created_at[11:16] }}
+    </p>
+
+    <p><strong>Address:</strong> {{ issue.address }}</p>
+    <p><strong>Description:</strong> {{ issue.description }}</p>
+    <p><strong>Location:</strong> {{ issue.latitude }}, {{ issue.longitude }}</p>
+
+    {% if issue.images %}
+      <div class="image-gallery">
+        {% for img in issue.images %}
+          <img src="{{ img }}" alt="Issue image">
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+{% endfor %}
+
+</body>
+</html>
