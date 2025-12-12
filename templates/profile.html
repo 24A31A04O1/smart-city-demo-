@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile Setup</title>
+  <style>
+    /* Background */
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f4f7fa, #dce3ec);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Container */
+    .form-container {
+      width: 400px;
+      padding: 30px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* Title */
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #003366;
+    }
+
+    /* Labels */
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #222;
+      font-weight: 500;
+    }
+
+    /* Inputs & selects */
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      border-color: #003366;
+      box-shadow: 0 0 4px rgba(0, 51, 102, 0.3);
+    }
+
+    /* Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #003366;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #00509e;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Profile Setup</h2>
+    <form method="POST" action="/profile">
+
+      <label for="full_name">Full Name</label>
+      <input type="text" id="full_name" name="full_name"
+             value="{{ saved.full_name if saved else '' }}" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email"
+             value="{{ saved.email if saved else '' }}" required>
+
+      <label for="phone_number">Phone Number</label>
+      <input type="text" id="phone_number" name="phone_number"
+             value="{{ saved.phone_number if saved else '' }}" required>
+
+      <label for="state">State</label>
+      <input type="text" id="state" name="state"
+             value="{{ saved.state if saved else '' }}" required>
+
+      <label for="district">District</label>
+      <select id="district" name="district_id" required>
+        <option value="">-- Select District --</option>
+        {% for d in districts %}
+          <option value="{{ d.id }}" {% if saved and saved.district_id == d.id %}selected{% endif %}>
+            {{ d.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <label for="constituency">Constituency</label>
+      <select id="constituency" name="constituency_id" required>
+        <option value="">-- Select Constituency --</option>
+        {% for c in constituencies %}
+          <option value="{{ c.id }}" data-district="{{ c.district_id }}"
+            {% if saved and saved.constituency_id == c.id %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button type="submit">Save Profile & Go to Dashboard</button>
+    </form>
+  </div>
+
+  <script>
+    function filterConstituencies() {
+        let districtId = document.getElementById("district").value;
+        let constituencySelect = document.getElementById("constituency");
+
+        for (let opt of constituencySelect.options) {
+            if (!opt.value) continue; // skip placeholder
+            if (opt.getAttribute("data-district") === districtId) {
+                opt.style.display = "block";
+            } else {
+                opt.style.display = "none";
+            }
+        }
+
+        // reset if invalid
+        if (constituencySelect.selectedOptions.length &&
+            constituencySelect.selectedOptions[0].getAttribute("data-district") !== districtId) {
+            constituencySelect.value = "";
+        }
+    }
+
+    // Run on change
+    document.getElementById("district").addEventListener("change", filterConstituencies);
+    // Run once on page load (important if saved values exist)
+    window.addEventListener("load", filterConstituencies);
+  </script>
+</body>
+</html>
